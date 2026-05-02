@@ -216,3 +216,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Bloqueia arquivos gigantes de dados brutos
+*.csv
+
+# Bloqueia o modelo gigante na pasta de artefatos
+model/artifacts/*.h5
