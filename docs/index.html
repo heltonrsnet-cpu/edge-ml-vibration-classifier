@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classificador de vibração Edge ML</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #0d1117; color: #c9d1d9; line-height: 1.7; }
+        header { background: linear-gradient(135deg, #1A3C5E, #2E86C1); padding: 56px 40px; text-align: center; }
+        header h1 { font-size: 2.4rem; color: #fff; margin-bottom: 10px; }
+        header p  { font-size: 1.1rem; color: #AED6F1; max-width: 640px; margin: 0 auto; }
+        .badges { margin-top: 22px; }
+        .badge  { display: inline-block; background: #21262d; border: 1px solid #30363d;
+                   border-radius: 20px; padding: 4px 14px; margin: 4px; font-size: 0.82rem; color: #58a6ff; }
+        main { max-width: 980px; margin: 36px auto; padding: 0 20px; }
+        section { background: #161b22; border: 1px solid #30363d; border-radius: 12px;
+                   padding: 28px 32px; margin-bottom: 24px; }
+        h2 { color: #58a6ff; font-size: 1.35rem; margin-bottom: 16px;
+               border-bottom: 1px solid #30363d; padding-bottom: 8px; }
+        h3 { color: #e6edf3; margin: 18px 0 8px; font-size: 1rem; }
+        .metrics { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+        .metric { background: #0d1117; border: 1px solid #1f6feb; border-radius: 10px;
+                   padding: 18px 28px; text-align: center; flex: 1; min-width: 140px; }
+        .metric-val { font-size: 1.9rem; font-weight: bold; color: #3fb950; }
+        .metric-lbl { font-size: 0.82rem; color: #8b949e; margin-top: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 0.93rem; }
+        th { background: #1f6feb; color: #fff; padding: 10px 14px; text-align: left; }
+        td { padding: 9px 14px; border-bottom: 1px solid #21262d; }
+        tr:hover td { background: #1c2128; }
+        .tag { display: inline-block; background: #388bfd26; color: #58a6ff;
+                border: 1px solid #388bfd; border-radius: 20px; padding: 2px 10px; font-size: 0.82rem; }
+        .breaking { background: #da363326; color: #f85149; border: 1px solid #da3633;
+                     border-radius: 4px; padding: 2px 8px; font-size: 0.82rem; }
+        pre { background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+               padding: 18px; overflow-x: auto; margin: 12px 0; }
+        code { font-family: 'Courier New', monospace; font-size: 0.88rem; color: #e6edf3; }
+        pre code { color: #79c0ff; }
+        footer { text-align: center; padding: 28px; color: #6e7681; font-size: 0.85rem;
+                  border-top: 1px solid #21262d; margin-top: 20px; }
+        a { color: #58a6ff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>⚡ Classificador de vibração Edge ML</h1>
+    <p>Classificador de anomalias de vibração para ESP32 com TFLite Micro.<br>
+       Detecção de falhas em rolamentos industriais em tempo real.</p>
+    <div class="badges">
+        <span class="badge">🏷️ v2.0.0 — latest</span>
+        <span class="badge">📦 TFLite Micro INT8</span>
+        <span class="badge">🔧 ESP32 / STM32</span>
+        <span class="badge">🤖 3 classes</span>
+        <span class="badge">📄 MIT License</span>
+    </div>
+</header>
+
+<main>
+    <section>
+        <h2>📊 Métricas — Versão Atual (v2.0.0)</h2>
+        <div class="metrics">
+            <div class="metric"><div class="metric-val">72.1%</div><div class="metric-lbl">Acurácia (3 classes)</div></div>
+            <div class="metric"><div class="metric-val">~18 ms</div><div class="metric-lbl">Latência no ESP32</div></div>
+            <div class="metric"><div class="metric-val">43 KB</div><div class="metric-lbl">Modelo FP32</div></div>
+            <div class="metric"><div class="metric-val">128</div><div class="metric-lbl">Features de entrada</div></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>📈 Histórico de Versões</h2>
+        <table>
+            <tr><th>Versão</th><th>Tipo</th><th>Classes</th><th>Features</th><th>Acurácia</th><th>Breaking?</th></tr>
+            <tr>
+                <td><span class="tag">v1.0.0</span></td>
+                <td>Initial release</td><td>2</td><td>64</td>
+                <td>95.7%</td><td>—</td>
+            </tr>
+            <tr>
+                <td><span class="tag">v1.1.0</span></td>
+                <td>MINOR — Nova classe 'falha iminente'</td><td>3</td><td>64</td>
+                <td>86.0%</td><td>Não ✅</td>
+            </tr>
+            <tr>
+                <td><span class="tag">v2.0.0</span></td>
+                <td>MAJOR — Janela temporal dobrada</td><td>3</td><td>128</td>
+                <td>72.1%</td><td><span class="breaking">⚠️ SIM</span></td>
+            </tr>
+        </table>
+        <p style="margin-top:12px; font-size:0.88rem; color:#8b949e;">
+            ⚠️ Breaking change na v2.0.0: firmware deve enviar 128 features (era 64).
+            Veja o <a href="migration-v2.md">Guia de Migração</a>.
+        </p>
+    </section>
+
+    <section>
+        <h2>🚀 Início Rápido</h2>
+        <h3>1. Clonar o repositório na versão correta</h3>
+        <pre><code>git clone https://github.com/SEU_USUARIO/edge-ml-vibration-classifier.git
+cd edge-ml-vibration-classifier
+git checkout v2.0.0   # versão estável mais recente</code></pre>
+        <h3>2. Treinar e exportar o modelo</h3>
+        <pre><code>pip install tensorflow scikit-learn numpy
+python model/train.py
+python model/quantize.py
+# → gera: model/artifacts/vibration_classifier_int8.tflite</code></pre>
+        <h3>3. Flash no ESP32 (ESP-IDF)</h3>
+        <pre><code>cp model/artifacts/vibration_classifier_int8.tflite firmware/
+idf.py build flash monitor</code></pre>
+    </section>
+
+    <section>
+        <h2>🏗️ Arquitetura do Pipeline</h2>
+        <p style="font-size:0.95rem; line-height:2;">
+            <strong>Sensor:</strong> ADXL345 via SPI @ 1 kHz →
+            <strong>Buffer:</strong> 128 amostras (janela deslizante) →
+            <strong>Inferência:</strong> TFLite Micro INT8 no ESP32 (~18 ms) →
+            <strong>Saída:</strong> 0=Normal · 1=Falha Iminente · 2=Falha →
+            <strong>Alerta:</strong> MQTT → Dashboard
+        </p>
+    </section>
+
+    <section>
+        <h2>📦 Downloads</h2>
+        <table>
+            <tr><th>Arquivo</th><th>Versão</th><th>Descrição</th></tr>
+            <tr><td><a href="https://github.com/SEU_USUARIO/edge-ml-vibration-classifier/releases/tag/v2.0.0">vibration_classifier_v2.tflite</a></td><td><span class="tag">v2.0.0</span></td><td>Modelo FP32 — 3 classes, 128 features</td></tr>
+            <tr><td><a href="https://github.com/SEU_USUARIO/edge-ml-vibration-classifier/releases/tag/v1.1.0">vibration_classifier_v11.tflite</a></td><td><span class="tag">v1.1.0</span></td><td>Modelo FP32 — 3 classes, 64 features</td></tr>
+            <tr><td><a href="https://github.com/SEU_USUARIO/edge-ml-vibration-classifier/releases/tag/v1.0.0">vibration_classifier_v1.tflite</a></td><td><span class="tag">v1.0.0</span></td><td>Modelo FP32 — 2 classes, 64 features (baseline)</td></tr>
+        </table>
+    </section>
+</main>
+
+<footer>
+    <p>Desenvolvido como material didático · Licença MIT ·
+    <a href="https://github.com/SEU_USUARIO/edge-ml-vibration-classifier">Ver no GitHub</a></p>
+    <p style="margin-top:6px;">Computação na Borda e IA Aplicada a Sistemas Embarcados</p>
+</footer>
+</body>
+</html>
